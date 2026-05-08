@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grundlig Massage - Idrotts- & Klassisk Massage</title>
+    <style>
+        :root {
+            --sage: #7a8d80;
+            --cream: #f9f7f2;
+            --text: #333;
+            --white: #ffffff;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            margin: 0; 
+            color: var(--text); 
+            background-color: var(--cream);
+            line-height: 1.8;
+        }
+        header { 
+            padding: 1rem 2rem; 
+            text-align: center; 
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+        .hero { 
+            padding: 8rem 10%; 
+            text-align: center; 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 2rem; }
+        .cta-button { 
+            display: inline-block; 
+            background: var(--sage); 
+            color: white; 
+            padding: 1.2rem 3rem; 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .cta-button:hover {
+            background: #6a7c70;
+            transform: translateY(-2px);
+        }
+        .container { max-width: 1000px; margin: auto; padding: 5rem 1rem; }
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 3rem; 
+            margin-bottom: 4rem;
+        }
+        .service-item { 
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .service-item:hover {
+            transform: translateY(-5px);
+        }
+        .price { font-weight: bold; color: var(--sage); font-size: 1.2rem; display: block; margin-top: 1rem; }
+        
+        .about-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 5rem;
+        }
+        .about-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .about-text h2 { color: var(--sage); margin-top: 0; }
+
+        .contact-section {
+            background-color: var(--sage);
+            color: white;
+            padding: 6rem 1rem;
+            text-align: center;
+        }
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            text-align: left;
+        }
+        .contact-info h2 { color: white; margin-top: 0; }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .contact-form input, .contact-form textarea {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+        .submit-button {
+            background: var(--white);
+            color: var(--sage);
+            border: none;
+            padding: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            text-transform: uppercase;
+            transition: opacity 0.2s;
+        }
+        .submit-button:hover {
+            opacity: 0.9;
+        }
+        
+        .info-section { text-align: center; background: var(--cream); padding: 5rem 1rem; }
+        
+        footer { text-align: center; padding: 4rem; font-size: 0.9rem; background: var(--white); border-top: 1px solid #eee; }
+        
+        @media (max-width: 768px) {
+            .about-section, .contact-container { grid-template-columns: 1fr; gap: 2rem; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="images/logo.png" alt="Grundlig Massage Logo" class="logo">
+        <h2 style="letter-spacing: 3px; text-transform: uppercase; margin: 0; font-weight: 300;">Grundlig Massage</h2>
+    </header>
+
+    <section class="hero">
+        <h1>Välkommen till Reinhold Gillholm</h1>
+        <p>Idrottsmassage och klassisk massage för din hälsa och rörlighet i Västra Frölunda.</p>
+        <a href="#contact" class="cta-button">Boka behandling</a>
+    </section>
+
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 3rem;">Våra tjänster</h2>
+        <div class="services-grid">
+            <div class="service-item">
+                <h3>Idrottsmassage</h3>
+                <p>En djupgående behandling som fokuserar på att förebygga skador, förbättra rörlighet och påskynda återhämtning efter fysisk aktivitet. Anpassas efter dina specifika behov och träningsmål.</p>
+                <span class="price">Från 750 kr</span>
+            </div>
+            <div class="service-item">
+                <h3>Klassisk Massage</h3>
+                <p>En avslappnande och terapeutisk massage som mjukar upp spända muskler, ökar cirkulationen och ger en skön känsla av välbefinnande. Perfekt för stressreducering och vardaglig muskelvärk.</p>
+                <span class="price">Från 650 kr</span>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=800&q=80" alt="Avslappnande miljö" class="about-image">
+            <div class="about-text">
+                <h2>Om Grundlig Massage</h2>
+                <p>Jag heter Reinhold Gillholm och driver Grundlig Massage i Västra Frölunda. Med fokus på kvalitet och personligt bemötande hjälper jag dig att nå dina hälsomål, oavsett om du är elitidrottare eller behöver hjälp med vardagsstelhet.</p>
+                <p>Målet är alltid att ge en behandling som gör skillnad på djupet – därav namnet Grundlig Massage. Jag kombinerar tekniker från idrottsmassage och klassisk massage för att skapa en behandling som passar just dig.</p>
+            </div>
+        </div>
+    </div>
+
+    <section id="contact" class="contact-section">
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>Boka din tid</h2>
+                <p>Välkommen att kontakta mig för tidsbokning eller frågor. Jag svarar oftast snabbast via telefon eller sms.</p>
+                <p>
+                    <strong>Telefon:</strong><br>
+                    <a href="tel:+46793500774" style="color: white; text-decoration: none;">0793-500 774</a>
+                </p>
+                <p>
+                    <strong>E-post:</strong><br>
+                    <a href="mailto:glad_man1@hotmail.com" style="color: white; text-decoration: none;">glad_man1@hotmail.com</a>
+                </p>
+                <p>
+                    <strong>Adress:</strong><br>
+                    Åkeredsvägen 5, 421 63 Västra Frölunda
+                </p>
+            </div>
+            <form class="contact-form">
+                <input type="text" placeholder="Namn" required>
+                <input type="email" placeholder="E-post" required>
+                <textarea rows="4" placeholder="Ditt meddelande (t.ex. önskad dag och tid)"></textarea>
+                <button type="submit" class="submit-button">Skicka förfrågan</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Grundlig Massage - Reinhold Gillholm<br> 
+        Åkeredsvägen 5, 421 63 Västra Frölunda</p>
+    </footer>
+
+</body>
+</html>
