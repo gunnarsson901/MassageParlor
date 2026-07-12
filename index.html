@@ -22,6 +22,7 @@
             --classic-tint: #edf1ec;
             --fascia: #3f7a7b;
             --fascia-tint: #e6f1f1;
+            --wine: #731e35;
         }
         html {
             scroll-behavior: smooth;
@@ -38,18 +39,34 @@
             font-weight: 600;
             letter-spacing: -0.01em;
         }
+        .top-banner {
+            background:
+                linear-gradient(
+                    to bottom,
+                    var(--cream) 0%,
+                    rgba(250,248,244,0.85) 18%,
+                    rgba(250,248,244,0.1) 32%,
+                    rgba(38,46,40,0.15) 42%,
+                    rgba(38,46,40,0.45) 60%,
+                    rgba(38,46,40,0.55) 100%
+                ),
+                url('images/header.jpeg');
+            background-size: cover;
+            background-position: center top;
+        }
         header {
-            padding: 1rem 2rem;
+            padding: 1.75rem 2rem 1rem;
             text-align: center;
-            background: var(--cream);
+            background: transparent;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-bottom: 1px solid var(--border);
         }
         header h2 {
-            font-family: 'Inter', sans-serif;
-            font-weight: 300;
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            color: var(--wine);
+            letter-spacing: 0.03em;
         }
         .logo {
             max-width: 150px;
@@ -57,11 +74,9 @@
             margin-bottom: 0.5rem;
         }
         .hero {
-            padding: 8rem 10%;
+            padding: 3rem 10% 8rem;
             text-align: center;
-            background: linear-gradient(rgba(38,46,40,0.45), rgba(38,46,40,0.55)), url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
+            background: transparent;
             color: white;
         }
         .hero h1 { font-size: 3.3rem; font-weight: 600; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
@@ -91,7 +106,7 @@
             margin-bottom: 4rem;
         }
         .service-item {
-            background: var(--white);
+            background: linear-gradient(180deg, var(--tint) 0%, var(--white) 55%);
             padding: 2.5rem 2rem 2rem;
             border-radius: 12px;
             border-top: 4px solid var(--accent);
@@ -136,15 +151,28 @@
         .about-image {
             width: 100%;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(115,30,53,0.15);
         }
-        .about-text h2 { color: var(--sage); margin-top: 0; }
+        .about-text h2 { color: var(--wine); margin-top: 0; }
+        .section-heading { position: relative; padding-bottom: 1rem; }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--wine);
+        }
 
         .contact-section {
             background-color: var(--sage);
             color: white;
             padding: 6rem 1rem;
             text-align: center;
+            border-top: 3px solid var(--wine);
         }
         .contact-container {
             max-width: 800px;
@@ -154,7 +182,22 @@
             gap: 4rem;
             text-align: left;
         }
-        .contact-info h2 { color: white; margin-top: 0; }
+        .contact-info h2 {
+            color: white;
+            margin-top: 0;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        .contact-info h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 48px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--cream);
+        }
         .contact-form {
             display: flex;
             flex-direction: column;
@@ -162,12 +205,19 @@
         }
         .contact-form input, .contact-form select, .contact-form textarea {
             padding: 1rem;
-            border: none;
+            border: 2px solid transparent;
             border-radius: 8px;
             font-family: inherit;
             font-size: 1rem;
             color: var(--text);
             background: var(--white);
+            box-sizing: border-box;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--wine);
+            box-shadow: 0 0 0 3px rgba(115,30,53,0.15);
         }
         .contact-form select {
             appearance: none;
@@ -250,12 +300,12 @@
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background: #a1443a;
+            background: var(--wine);
         }
         .dp-day.dp-selected { background: var(--sage); color: white; }
         .dp-day.dp-selected.dp-booked::after { background: white; }
         .date-picker-legend { font-size: 0.75rem; color: #888; margin-top: 0.75rem; }
-        .date-picker-legend span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #a1443a; margin-right: 4px; }
+        .date-picker-legend span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--wine); margin-right: 4px; }
         #booked-times-note {
             display: none;
             font-size: 0.8rem;
@@ -280,29 +330,99 @@
 
         .info-section { text-align: center; background: var(--cream); padding: 5rem 1rem; }
         
-        footer { text-align: center; padding: 4rem; font-size: 0.9rem; background: var(--white); border-top: 1px solid #eee; }
+        footer { text-align: center; padding: 4rem; font-size: 0.9rem; background: var(--white); border-top: 2px solid var(--wine); }
         
         @media (max-width: 768px) {
             .about-section, .contact-container { grid-template-columns: 1fr; gap: 2rem; }
             .hero h1 { font-size: 2.5rem; }
         }
+
+        #intro {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--cream);
+            animation: intro-overlay-out 2.9s ease forwards;
+        }
+        #intro-logo {
+            position: absolute;
+            left: 50%;
+            width: 150px;
+            aspect-ratio: 600 / 525;
+            animation: intro-logo-move 2.9s ease forwards;
+        }
+        @keyframes intro-logo-move {
+            0% { top: 50%; transform: translate(-50%, -50%); }
+            48% { top: 50%; transform: translate(-50%, -50%); }
+            83% { top: 1.75rem; transform: translate(-50%, 0); }
+            100% { top: 1.75rem; transform: translate(-50%, 0); }
+        }
+        #intro-logo img {
+            position: absolute;
+        }
+        #intro-logo .intro-heart {
+            left: 27.33%; top: 10.10%; width: 44.00%; height: 51.05%;
+            transform-origin: 50% 50%;
+            animation: intro-heart 2.9s ease forwards;
+        }
+        #intro-logo .intro-hand-left {
+            left: 6.50%; top: 25.71%; width: 40.00%; height: 70.10%;
+            animation: intro-hand-left 2.9s ease forwards;
+        }
+        #intro-logo .intro-hand-right {
+            left: 51.67%; top: 25.52%; width: 40.50%; height: 70.29%;
+            animation: intro-hand-right 2.9s ease forwards;
+        }
+        @keyframes intro-hand-left {
+            0% { transform: translateX(-45px); opacity: 0; }
+            33% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes intro-hand-right {
+            0% { transform: translateX(45px); opacity: 0; }
+            33% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes intro-heart {
+            0% { transform: scale(0); opacity: 0; }
+            21% { transform: scale(0); opacity: 0; }
+            48% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes intro-overlay-out {
+            0% { opacity: 1; }
+            83% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #intro { display: none; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <img src="images/logo.png" alt="Grundlig Massage Logo" class="logo">
-        <h2 style="letter-spacing: 3px; text-transform: uppercase; margin: 0; font-weight: 300;">Grundlig Massage</h2>
-    </header>
+    <div id="intro" aria-hidden="true">
+        <div id="intro-logo">
+            <img src="images/logo-hand-left.png" alt="" class="intro-hand-left">
+            <img src="images/logo-hand-right.png" alt="" class="intro-hand-right">
+            <img src="images/logo-heart.png" alt="" class="intro-heart">
+        </div>
+    </div>
 
-    <section class="hero">
-        <h1>Välkommen till Grundlig Massage</h1>
-        <p>Idrottsmassage och klassisk massage för din hälsa och rörlighet i Göteborg.</p>
-        <a href="#contact" class="cta-button">Boka behandling</a>
-    </section>
+    <div class="top-banner">
+        <header>
+            <img src="images/logo.png" alt="Grundlig Massage Logo" class="logo">
+        </header>
+
+        <section class="hero">
+            <h1>Välkommen till Grundlig Massage</h1>
+            <p>Har du ont i kroppen, spänd rygg eller stela muskler? Genom skräddarsydd idrotts- och klassisk massage hjälper jag dig att bli av med smärtan och röra dig fritt igen.</p>
+            <a href="#contact" class="cta-button">Boka behandling</a>
+        </section>
+    </div>
 
     <div class="container">
-        <h2 style="text-align: center; margin-bottom: 3rem;">Våra tjänster</h2>
+        <h2 class="section-heading" style="text-align: center; margin-bottom: 3rem;">Våra tjänster</h2>
         <div class="services-grid">
             <div class="service-item service-item--sport">
                 <h3>Idrottsmassage</h3>
@@ -402,6 +522,9 @@
     <footer>
         <p>&copy; 2026 Grundlig Massage - Reinhold Gillholm<br>
         Olivedalsgatan 2, Göteborg</p>
+        <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #999;">
+            Webbplats av Felix Gunnarsson &middot; <a href="mailto:gunnarsson901@gmail.com" style="color: #999;">gunnarsson901@gmail.com</a>
+        </p>
     </footer>
 
     <script src="supabase-config.js"></script>
