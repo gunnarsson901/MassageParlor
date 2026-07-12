@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Föreslå annan tid - Grundlig Massage</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sport: #b8734a;
+            --sport-dark: #9c5f3b;
+            --cream: #faf8f4;
+            --text: #2a2a27;
+            --white: #ffffff;
+            --border: #e9e5db;
+        }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            color: var(--text);
+            background-color: var(--cream);
+            line-height: 1.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; color: var(--sport); font-size: 1.6rem; margin-top: 0; }
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+            max-width: 440px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .summary { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+        .summary p { margin: 0.4rem 0; }
+        .summary strong { color: var(--sport); }
+        label { display: block; font-weight: 600; margin-bottom: 0.4rem; margin-top: 1rem; }
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background: var(--sport);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        button:hover { background: var(--sport-dark); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        #status { margin-top: 1rem; font-weight: 500; }
+        #status.success { color: var(--sport-dark); }
+        #status.error { color: #a1443a; }
+        .missing { color: #a1443a; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Föreslå annan tid</h1>
+        <div class="summary" id="summary">Laddar bokningsuppgifter...</div>
+
+        <form id="decline-form">
+            <label for="suggested-date">Föreslaget nytt datum</label>
+            <input type="date" id="suggested-date" required>
+
+            <label for="suggested-time">Föreslagen ny tid</label>
+            <input type="time" id="suggested-time" required>
+
+            <label for="note">Meddelande till kund (valfritt)</label>
+            <textarea id="note" rows="3" placeholder="T.ex. anledning eller andra förslag på tider"></textarea>
+
+            <button type="submit">Skicka förslag till kunden</button>
+        </form>
+        <p id="status" style="display: none;"></p>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="booking-api.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const bookingId = params.get('id');
+        const bookingToken = params.get('token');
+
+        const summary = document.getElementById('summary');
+        const form = document.getElementById('decline-form');
+        const suggestedDateInput = document.getElementById('suggested-date');
+        const suggestedTimeInput = document.getElementById('suggested-time');
+        const status = document.getElementById('status');
+
+        suggestedDateInput.min = new Date().toISOString().split('T')[0];
+
+        let name, email, category, duration, date, time;
+        form.style.display = 'none';
+
+        (async () => {
+            if (!bookingId || !bookingToken) {
+                summary.innerHTML = '<p class="missing">Länken saknar bokningsuppgifter. Öppna länken direkt från mailet du fick.</p>';
+                return;
+            }
+            try {
+                const result = await callBookingFunction('get-booking', { query: { id: bookingId, token: bookingToken } });
+                ({ name, email, category, duration, date, time } = result.booking);
+                summary.innerHTML = `
+                    <p><strong>Namn:</strong> ${escapeHtml(name)}</p>
+                    <p><strong>E-post:</strong> ${escapeHtml(email)}</p>
+                    <p><strong>Kategori:</strong> ${escapeHtml(category)}</p>
+                    <p><strong>Längd:</strong> ${escapeHtml(duration)}</p>
+                    <p><strong>Önskat datum:</strong> ${escapeHtml(date)} kl. ${escapeHtml(time)}</p>
+                `;
+                form.style.display = '';
+            } catch (error) {
+                summary.innerHTML = error.status === 409
+                    ? '<p class="missing">Den här bokningen är redan hanterad.</p>'
+                    : '<p class="missing">Länken är ogiltig. Öppna länken direkt från mailet du fick.</p>';
+            }
+        })();
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const submitButton = form.querySelector('button');
+            submitButton.disabled = true;
+            status.style.display = 'block';
+            status.className = '';
+            status.textContent = 'Skickar förslag...';
+
+            try {
+                const suggestedDate = suggestedDateInput.value;
+                const suggestedTime = suggestedTimeInput.value;
+                const note = document.getElementById('note').value;
+                await callBookingFunction('decline-booking', {
+                    method: 'POST',
+                    body: { id: bookingId, token: bookingToken, suggestedDate, suggestedTime, note }
+                });
+                status.className = 'success';
+                status.textContent = 'Klart! Kunden har fått förslaget på ny tid.';
+            } catch (error) {
+                status.className = 'error';
+                status.textContent = error.status === 409
+                    ? 'Den här bokningen är redan hanterad.'
+                    : 'Något gick fel. Försök igen.';
+                if (error.status !== 409) submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

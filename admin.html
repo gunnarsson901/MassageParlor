@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Grundlig Massage</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sage: #5f7266;
+            --sage-dark: #4c5d52;
+            --sport: #b8734a;
+            --cream: #faf8f4;
+            --text: #2a2a27;
+            --white: #ffffff;
+            --border: #e9e5db;
+            --danger: #a1443a;
+        }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            color: var(--text);
+            background-color: var(--cream);
+            line-height: 1.6;
+        }
+        h1, h2 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; color: var(--sage); }
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            margin-bottom: 0.75rem;
+        }
+        button {
+            background: var(--sage);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        button:hover { background: var(--sage-dark); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        button.secondary { background: var(--border); color: var(--text); }
+        button.danger { background: var(--danger); }
+        button.small { padding: 0.4rem 0.7rem; font-size: 0.8rem; margin: 0.15rem; }
+        #login-error { color: var(--danger); font-weight: 500; min-height: 1.2rem; }
+
+        #dashboard { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .filters { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .filters button { background: var(--white); color: var(--text); border: 1px solid var(--border); }
+        .filters button.active { background: var(--sage); color: white; border-color: var(--sage); }
+
+        .calendar-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .calendar-header button {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--sage);
+            padding: 0 0.5rem;
+        }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+        .cal-weekday { font-weight: 600; color: #999; font-size: 0.75rem; padding-bottom: 4px; }
+        .cal-day {
+            position: relative;
+            min-height: 3.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0.3rem 0.2rem;
+            border: 1px solid transparent;
+        }
+        .cal-day:hover { background: var(--cream); }
+        .cal-day.cal-empty { cursor: default; }
+        .cal-day.cal-empty:hover { background: none; }
+        .cal-day.cal-selected { border-color: var(--sage); background: var(--cream); }
+        .cal-day .cal-daynum { font-size: 0.85rem; }
+        .cal-dots { display: flex; justify-content: center; gap: 2px; margin-top: 0.25rem; flex-wrap: wrap; }
+        .cal-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .cal-dot-pending { background: var(--sport); }
+        .cal-dot-confirmed { background: var(--sage); }
+        .cal-dot-declined { background: var(--danger); }
+        .cal-dot-cancelled { background: #888; }
+        .clear-date-filter { margin-bottom: 1rem; }
+
+        .table-wrapper { overflow-x: auto; background: var(--white); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        table { border-collapse: collapse; width: 100%; min-width: 900px; }
+        th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; vertical-align: top; }
+        th { font-weight: 600; color: var(--sage); background: var(--cream); }
+
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; color: white; }
+        .badge-pending { background: var(--sport); }
+        .badge-confirmed { background: var(--sage); }
+        .badge-declined { background: var(--danger); }
+        .badge-cancelled { background: #888; }
+
+        .edit-form input, .edit-form textarea { margin-bottom: 0.4rem; }
+        .decline-form { background: var(--cream); border-radius: 8px; padding: 0.75rem; margin-top: 0.5rem; }
+        .decline-form label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.2rem; }
+
+        #status-message { margin: 1rem 0; font-weight: 500; }
+        #status-message.error { color: var(--danger); }
+        #status-message.success { color: var(--sage-dark); }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper" id="login-wrapper">
+        <div class="card">
+            <h1>Admin</h1>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="E-post" required>
+                <input type="password" id="login-password" placeholder="Lösenord" required>
+                <button type="submit" style="width: 100%;">Logga in</button>
+                <p id="login-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <div class="dash-header">
+            <h1 style="margin: 0;">Bokningar</h1>
+            <button class="secondary" id="logout-button">Logga ut</button>
+        </div>
+        <div class="calendar-card">
+            <div class="calendar-header">
+                <button type="button" id="cal-prev">‹</button>
+                <span id="cal-month-label"></span>
+                <button type="button" id="cal-next">›</button>
+            </div>
+            <div class="calendar-grid" id="cal-grid"></div>
+        </div>
+        <button class="small secondary clear-date-filter" id="clear-date-filter" style="display: none;">Visa alla datum</button>
+        <div class="filters" id="filters">
+            <button data-filter="all" class="active">Alla</button>
+            <button data-filter="pending">Väntande</button>
+            <button data-filter="confirmed">Bekräftade</button>
+            <button data-filter="declined">Avböjda</button>
+            <button data-filter="cancelled">Avbokade</button>
+        </div>
+        <p id="status-message" style="display: none;"></p>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Namn</th>
+                        <th>E-post</th>
+                        <th>Kategori</th>
+                        <th>Längd</th>
+                        <th>Status</th>
+                        <th>Meddelande</th>
+                        <th>Åtgärder</th>
+                    </tr>
+                </thead>
+                <tbody id="bookings-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const loginWrapper = document.getElementById('login-wrapper');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const logoutButton = document.getElementById('logout-button');
+        const filtersEl = document.getElementById('filters');
+        const bookingsBody = document.getElementById('bookings-body');
+        const statusMessage = document.getElementById('status-message');
+
+        let bookings = [];
+        let currentFilter = 'all';
+        let editingId = null;
+        let decliningId = null;
+        let calendarMonth = new Date();
+        calendarMonth.setDate(1);
+        let selectedDate = null;
+
+        const calGrid = document.getElementById('cal-grid');
+        const calMonthLabel = document.getElementById('cal-month-label');
+        const clearDateFilterButton = document.getElementById('clear-date-filter');
+
+        function showStatus(text, isError) {
+            statusMessage.style.display = 'block';
+            statusMessage.className = isError ? 'error' : 'success';
+            statusMessage.textContent = text;
+        }
+
+        async function callAdmin(action, extra = {}) {
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) throw new Error('not-logged-in');
+
+            const isList = action === 'list';
+            const url = new URL(`${SUPABASE_URL}/functions/v1/admin-bookings`);
+            if (isList) url.searchParams.set('action', 'list');
+
+            const response = await fetch(url.toString(), {
+                method: isList ? 'GET' : 'POST',
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: isList ? undefined : JSON.stringify({ action, ...extra }),
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const err = new Error(data.error || 'request-failed');
+                err.status = response.status;
+                throw err;
+            }
+            return data;
+        }
+
+        function statusLabel(status) {
+            return { pending: 'Väntande', confirmed: 'Bekräftad', declined: 'Avböjd', cancelled: 'Avbokad' }[status] || status;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+            }[ch]));
+        }
+
+        function renderRow(rawBooking) {
+            // Booking data comes from an unauthenticated public form, so escape
+            // everything before it goes into innerHTML.
+            const booking = {
+                ...rawBooking,
+                name: escapeHtml(rawBooking.name),
+                email: escapeHtml(rawBooking.email),
+                category: escapeHtml(rawBooking.category),
+                duration: escapeHtml(rawBooking.duration),
+                date: escapeHtml(rawBooking.date),
+                time: escapeHtml(rawBooking.time),
+                message: escapeHtml(rawBooking.message),
+            };
+            const isEditing = editingId === rawBooking.id;
+            const isDeclining = decliningId === rawBooking.id;
+
+            if (isEditing) {
+                return `
+                    <tr>
+                        <td colspan="8">
+                            <div class="edit-form">
+                                <input type="date" data-field="date" value="${booking.date}">
+                                <input type="time" data-field="time" value="${booking.time}">
+                                <input type="text" data-field="name" value="${booking.name}" placeholder="Namn">
+                                <input type="email" data-field="email" value="${booking.email}" placeholder="E-post">
+                                <input type="text" data-field="category" value="${booking.category}" placeholder="Kategori">
+                                <input type="text" data-field="duration" value="${booking.duration}" placeholder="Längd">
+                                <textarea data-field="message" rows="2" placeholder="Meddelande">${booking.message}</textarea>
+                                <button class="small save-edit" data-id="${rawBooking.id}">Spara</button>
+                                <button class="small secondary cancel-edit">Avbryt</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            const actions = [];
+            if (booking.status === 'pending') {
+                actions.push(`<button class="small accept-btn" data-id="${booking.id}">Bekräfta</button>`);
+                actions.push(`<button class="small secondary decline-toggle" data-id="${booking.id}">Avböj</button>`);
+            }
+            if (booking.status === 'confirmed') {
+                actions.push(`<button class="small secondary cancel-btn" data-id="${booking.id}">Avboka</button>`);
+            }
+            actions.push(`<button class="small secondary edit-toggle" data-id="${booking.id}">Redigera</button>`);
+            actions.push(`<button class="small danger delete-btn" data-id="${booking.id}">Ta bort</button>`);
+
+            const declineFormHtml = isDeclining ? `
+                <div class="decline-form">
+                    <label>Föreslaget nytt datum</label>
+                    <input type="date" class="suggested-date">
+                    <label>Föreslagen ny tid</label>
+                    <input type="time" class="suggested-time">
+                    <label>Meddelande (valfritt)</label>
+                    <textarea class="suggested-note" rows="2"></textarea>
+                    <button class="small send-decline" data-id="${booking.id}">Skicka</button>
+                    <button class="small secondary cancel-decline">Avbryt</button>
+                </div>
+            ` : '';
+
+            return `
+                <tr>
+                    <td>${booking.date} ${booking.time}</td>
+                    <td>${booking.name}</td>
+                    <td>${booking.email}</td>
+                    <td>${booking.category}</td>
+                    <td>${booking.duration}</td>
+                    <td><span class="badge badge-${booking.status}">${statusLabel(booking.status)}</span></td>
+                    <td>${booking.message || ''}</td>
+                    <td>${actions.join(' ')}${declineFormHtml}</td>
+                </tr>
+            `;
+        }
+
+        function render() {
+            let filtered = currentFilter === 'all' ? bookings : bookings.filter((b) => b.status === currentFilter);
+            if (selectedDate) filtered = filtered.filter((b) => b.date === selectedDate);
+            bookingsBody.innerHTML = filtered.map(renderRow).join('') || '<tr><td colspan="8">Inga bokningar.</td></tr>';
+            clearDateFilterButton.style.display = selectedDate ? 'inline-block' : 'none';
+        }
+
+        function renderCalendar() {
+            const bookingsByDate = new Map();
+            bookings.forEach((b) => {
+                if (!bookingsByDate.has(b.date)) bookingsByDate.set(b.date, []);
+                bookingsByDate.get(b.date).push(b.status);
+            });
+
+            const monthNames = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'];
+            calMonthLabel.textContent = `${monthNames[calendarMonth.getMonth()]} ${calendarMonth.getFullYear()}`;
+
+            calGrid.innerHTML = '';
+            ['M', 'T', 'O', 'T', 'F', 'L', 'S'].forEach((w) => {
+                const el = document.createElement('div');
+                el.className = 'cal-weekday';
+                el.textContent = w;
+                calGrid.appendChild(el);
+            });
+
+            const firstDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+            const startOffset = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
+
+            for (let i = 0; i < startOffset; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'cal-day cal-empty';
+                calGrid.appendChild(empty);
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${calendarMonth.getFullYear()}-${String(calendarMonth.getMonth() + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const cell = document.createElement('div');
+                cell.className = 'cal-day' + (dateStr === selectedDate ? ' cal-selected' : '');
+
+                const statuses = [...new Set(bookingsByDate.get(dateStr) || [])];
+                cell.innerHTML = `
+                    <div class="cal-daynum">${d}</div>
+                    <div class="cal-dots">${statuses.map((s) => `<span class="cal-dot cal-dot-${s}"></span>`).join('')}</div>
+                `;
+                cell.addEventListener('click', () => {
+                    selectedDate = selectedDate === dateStr ? null : dateStr;
+                    renderCalendar();
+                    render();
+                });
+                calGrid.appendChild(cell);
+            }
+        }
+
+        async function loadBookings() {
+            try {
+                const { bookings: list } = await callAdmin('list');
+                bookings = list;
+                renderCalendar();
+                render();
+            } catch (error) {
+                showStatus('Kunde inte hämta bokningar.', true);
+            }
+        }
+
+        document.getElementById('cal-prev').addEventListener('click', () => {
+            calendarMonth.setMonth(calendarMonth.getMonth() - 1);
+            renderCalendar();
+        });
+        document.getElementById('cal-next').addEventListener('click', () => {
+            calendarMonth.setMonth(calendarMonth.getMonth() + 1);
+            renderCalendar();
+        });
+        clearDateFilterButton.addEventListener('click', () => {
+            selectedDate = null;
+            renderCalendar();
+            render();
+        });
+
+        filtersEl.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-filter]');
+            if (!button) return;
+            currentFilter = button.dataset.filter;
+            filtersEl.querySelectorAll('button').forEach((b) => b.classList.toggle('active', b === button));
+            render();
+        });
+
+        bookingsBody.addEventListener('click', async (event) => {
+            const target = event.target;
+
+            if (target.matches('.accept-btn')) {
+                if (!confirm('Bekräfta den här bokningen?')) return;
+                try {
+                    await callAdmin('accept', { id: target.dataset.id });
+                    showStatus('Bokningen bekräftad.', false);
+                    await loadBookings();
+                } catch { showStatus('Något gick fel.', true); }
+            }
+
+            if (target.matches('.cancel-btn')) {
+                if (!confirm('Avboka den här bokningen? Kunden meddelas via mail.')) return;
+                try {
+                    await callAdmin('cancel', { id: target.dataset.id });
+                    showStatus('Bokningen avbokad.', false);
+                    await loadBookings();
+                } catch { showStatus('Något gick fel.', true); }
+            }
+
+            if (target.matches('.delete-btn')) {
+                if (!confirm('Ta bort den här bokningen permanent? Går inte att ångra.')) return;
+                try {
+                    await callAdmin('delete', { id: target.dataset.id });
+                    showStatus('Bokningen borttagen.', false);
+                    await loadBookings();
+                } catch { showStatus('Något gick fel.', true); }
+            }
+
+            if (target.matches('.decline-toggle')) {
+                decliningId = target.dataset.id;
+                render();
+            }
+            if (target.matches('.cancel-decline')) {
+                decliningId = null;
+                render();
+            }
+            if (target.matches('.send-decline')) {
+                const row = target.closest('td');
+                const suggestedDate = row.querySelector('.suggested-date').value;
+                const suggestedTime = row.querySelector('.suggested-time').value;
+                const note = row.querySelector('.suggested-note').value;
+                if (!suggestedDate || !suggestedTime) { showStatus('Fyll i förslag på ny tid.', true); return; }
+                try {
+                    await callAdmin('decline', { id: target.dataset.id, suggestedDate, suggestedTime, note });
+                    showStatus('Förslag skickat till kund.', false);
+                    decliningId = null;
+                    await loadBookings();
+                } catch { showStatus('Något gick fel.', true); }
+            }
+
+            if (target.matches('.edit-toggle')) {
+                editingId = target.dataset.id;
+                render();
+            }
+            if (target.matches('.cancel-edit')) {
+                editingId = null;
+                render();
+            }
+            if (target.matches('.save-edit')) {
+                const row = target.closest('td');
+                const patch = {};
+                row.querySelectorAll('[data-field]').forEach((el) => { patch[el.dataset.field] = el.value; });
+                try {
+                    await callAdmin('update', { id: target.dataset.id, patch });
+                    showStatus('Bokningen uppdaterad.', false);
+                    editingId = null;
+                    await loadBookings();
+                } catch { showStatus('Något gick fel.', true); }
+            }
+        });
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            loginError.textContent = '';
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) {
+                loginError.textContent = 'Fel e-post eller lösenord.';
+            }
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            await sb.auth.signOut();
+        });
+
+        sb.auth.onAuthStateChange((_event, session) => {
+            if (session) {
+                loginWrapper.style.display = 'none';
+                dashboard.style.display = 'block';
+                loadBookings();
+            } else {
+                loginWrapper.style.display = 'flex';
+                dashboard.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

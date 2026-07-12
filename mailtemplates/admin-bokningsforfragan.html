@@ -1,0 +1,21 @@
+<!--
+  EmailJS-mall: EMAILJS_TEMPLATE_ID_REQUEST (satt som secret på create-booking-funktionen i Supabase)
+  Mottagare: Admin (Reinhold) - sätt "To Email" i EmailJS till gunnarsson901@gmail.com (test),
+             byt till grundlig.massage@hotmail.com inför lansering.
+  Skickas: Direkt när kunden fyller i bokningsformuläret på index.html.
+  Subject (i EmailJS-mallens inställningar, inte Content): Ny bokningsförfrågan - Grundlig Massage
+  Klistra in innehållet nedan i EmailJS-mallens "Content"-fält (Code view).
+-->
+<p>Ny bokningsförfrågan från <strong>{{from_name}}</strong></p>
+<table cellpadding="6">
+  <tr><td><strong>Kategori:</strong></td><td>{{category}}</td></tr>
+  <tr><td><strong>Längd:</strong></td><td>{{duration}}</td></tr>
+  <tr><td><strong>Datum:</strong></td><td>{{date}}</td></tr>
+  <tr><td><strong>Tid:</strong></td><td>{{time}}</td></tr>
+  <tr><td><strong>E-post:</strong></td><td>{{from_email}}</td></tr>
+  <tr><td><strong>Meddelande:</strong></td><td>{{message}}</td></tr>
+</table>
+<p>
+  <a href="{{accept_link}}" style="background:#5f7266;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;margin-right:10px;display:inline-block;">✅ Bekräfta bokning</a>
+  <a href="{{decline_link}}" style="background:#b8734a;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;">❌ Föreslå annan tid</a>
+</p>

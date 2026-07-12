@@ -1,0 +1,23 @@
+<!--
+  EmailJS-mall: EMAILJS_TEMPLATE_ID_CUSTOMER (satt som secret på edge-funktionerna i Supabase)
+  Mottagare: Kund - sätt "To Email" i EmailJS till {{to_email}}
+  Återanvänds för alla tre kundmail:
+    1. "Tack för din bokning"    - skickas från index.html direkt vid bokning
+    2. "Bokning bekräftad"       - skickas från accept.html
+    3. "Vi behöver hitta en ny tid" - skickas från decline.html
+  Rubrik, brödtext, accentfärg och ämne skickas som variabler (heading, body_html,
+  accent_color, subject) från JavaScript-koden - inget behöver ändras i EmailJS-dashboarden
+  för nytt innehåll.
+  Subject (i EmailJS-mallens inställningar, inte Content): {{subject}}
+
+  VIKTIGT: body_html innehåller HTML-taggar (<p>, <table> osv). EmailJS escapar
+  {{variabel}} som standard, så den måste skrivas med TRE klammerparenteser
+  {{{body_html}}} för att renderas som riktig HTML istället för att visas som text.
+  Klistra in innehållet nedan i EmailJS-mallens "Content"-fält (Code view).
+-->
+<div style="font-family: Arial, sans-serif; color: #2a2a27; max-width: 480px; margin: 0 auto;">
+  <h2 style="color: {{accent_color}};">{{heading}}</h2>
+  <p>Hej {{to_name}},</p>
+  {{{body_html}}}
+  <p style="margin-top: 2rem;">Mvh Reinhold, Grundlig Massage</p>
+</div>

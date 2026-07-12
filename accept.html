@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bekräfta bokning - Grundlig Massage</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sage: #5f7266;
+            --sage-dark: #4c5d52;
+            --cream: #faf8f4;
+            --text: #2a2a27;
+            --white: #ffffff;
+            --border: #e9e5db;
+        }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            color: var(--text);
+            background-color: var(--cream);
+            line-height: 1.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; color: var(--sage); font-size: 1.6rem; margin-top: 0; }
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+            max-width: 440px;
+            width: 100%;
+        }
+        .summary { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+        .summary p { margin: 0.4rem 0; }
+        .summary strong { color: var(--sage); }
+        button {
+            width: 100%;
+            background: var(--sage);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        button:hover { background: var(--sage-dark); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        #status { margin-top: 1rem; font-weight: 500; }
+        #status.success { color: var(--sage-dark); }
+        #status.error { color: #a1443a; }
+        .missing { color: #a1443a; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Bekräfta bokning</h1>
+        <div class="summary" id="summary">Laddar bokningsuppgifter...</div>
+        <button id="confirm-button">Bekräfta bokning</button>
+        <p id="status" style="display: none;"></p>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="supabase-config.js"></script>
+    <script src="booking-api.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const bookingId = params.get('id');
+        const bookingToken = params.get('token');
+
+        const summary = document.getElementById('summary');
+        const confirmButton = document.getElementById('confirm-button');
+        const status = document.getElementById('status');
+
+        let name, email, category, duration, date, time;
+        confirmButton.disabled = true;
+
+        (async () => {
+            if (!bookingId || !bookingToken) {
+                summary.innerHTML = '<p class="missing">Länken saknar bokningsuppgifter. Öppna länken direkt från mailet du fick.</p>';
+                return;
+            }
+            try {
+                const result = await callBookingFunction('get-booking', { query: { id: bookingId, token: bookingToken } });
+                ({ name, email, category, duration, date, time } = result.booking);
+                summary.innerHTML = `
+                    <p><strong>Namn:</strong> ${escapeHtml(name)}</p>
+                    <p><strong>E-post:</strong> ${escapeHtml(email)}</p>
+                    <p><strong>Kategori:</strong> ${escapeHtml(category)}</p>
+                    <p><strong>Längd:</strong> ${escapeHtml(duration)}</p>
+                    <p><strong>Datum:</strong> ${escapeHtml(date)}</p>
+                    <p><strong>Tid:</strong> ${escapeHtml(time)}</p>
+                `;
+                confirmButton.disabled = false;
+            } catch (error) {
+                summary.innerHTML = error.status === 409
+                    ? '<p class="missing">Den här bokningen är redan hanterad.</p>'
+                    : '<p class="missing">Länken är ogiltig. Öppna länken direkt från mailet du fick.</p>';
+            }
+        })();
+
+        // --- Skapa kalenderhändelse automatiskt via Google-inloggning (OAuth) ---
+        let tokenClient;
+        let hasGrantedAccess = false;
+        let confirmed = false;
+
+        function requestAccessToken() {
+            return new Promise((resolve, reject) => {
+                if (!tokenClient) {
+                    tokenClient = google.accounts.oauth2.initTokenClient({
+                        client_id: GOOGLE_OAUTH_CLIENT_ID,
+                        scope: 'https://www.googleapis.com/auth/calendar.events',
+                        callback: () => {}
+                    });
+                }
+                tokenClient.callback = (response) => {
+                    if (response.error) reject(response);
+                    else resolve(response.access_token);
+                };
+                tokenClient.requestAccessToken({ prompt: hasGrantedAccess ? '' : 'consent' });
+            });
+        }
+
+        async function addToGoogleCalendar(accessToken) {
+            const start = new Date(`${date}T${time}`);
+            const minutes = parseInt(duration, 10) || 60;
+            const end = new Date(start.getTime() + minutes * 60000);
+
+            const response = await fetch(
+                `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR_ID)}/events`,
+                {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        summary: `${category} - ${name}`,
+                        location: 'Olivedalsgatan 2, Göteborg',
+                        description: `Bokning via Grundlig Massage. Kund: ${name} (${email})`,
+                        start: { dateTime: start.toISOString(), timeZone: 'Europe/Stockholm' },
+                        end: { dateTime: end.toISOString(), timeZone: 'Europe/Stockholm' }
+                    })
+                }
+            );
+            if (!response.ok) throw new Error('Kunde inte skapa kalenderhändelse');
+        }
+
+        confirmButton.addEventListener('click', async () => {
+            confirmButton.disabled = true;
+            status.style.display = 'block';
+            status.className = '';
+
+            try {
+                if (!confirmed) {
+                    status.textContent = 'Bekräftar bokning...';
+                    await callBookingFunction('accept-booking', { method: 'POST', body: { id: bookingId, token: bookingToken } });
+                    confirmed = true;
+                }
+
+                status.textContent = 'Loggar in med Google...';
+                const accessToken = await requestAccessToken();
+                hasGrantedAccess = true;
+
+                status.textContent = 'Lägger till i kalendern...';
+                await addToGoogleCalendar(accessToken);
+
+                status.className = 'success';
+                status.textContent = 'Klart! Bokningen är bekräftad, kunden har fått ett mail och tiden är tillagd i kalendern.';
+            } catch (error) {
+                status.className = 'error';
+                if (error.status === 409 && !confirmed) {
+                    status.textContent = 'Den här bokningen är redan hanterad.';
+                } else if (confirmed) {
+                    status.textContent = 'Bokningen är bekräftad och kunden har fått mail, men kalenderhändelsen kunde inte skapas. Försök igen eller lägg till manuellt.';
+                    confirmButton.disabled = false;
+                } else {
+                    status.textContent = 'Något gick fel. Försök igen.';
+                    confirmButton.disabled = false;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

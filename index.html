@@ -4,59 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grundlig Massage - Idrotts- & Klassisk Massage</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --sage: #7a8d80;
-            --cream: #f9f7f2;
-            --text: #333;
+            --sage: #5f7266;
+            --sage-dark: #4c5d52;
+            --cream: #faf8f4;
+            --text: #2a2a27;
             --white: #ffffff;
+            --border: #e9e5db;
+            --sport: #b8734a;
+            --sport-tint: #f6ece2;
+            --classic: #5f7266;
+            --classic-tint: #edf1ec;
+            --fascia: #3f7a7b;
+            --fascia-tint: #e6f1f1;
         }
         html {
             scroll-behavior: smooth;
         }
-        body { 
-            font-family: 'Helvetica Neue', Arial, sans-serif; 
-            margin: 0; 
-            color: var(--text); 
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            color: var(--text);
             background-color: var(--cream);
             line-height: 1.8;
         }
-        header { 
-            padding: 1rem 2rem; 
-            text-align: center; 
-            background: var(--white);
+        h1, h2, h3 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        header {
+            padding: 1rem 2rem;
+            text-align: center;
+            background: var(--cream);
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border);
+        }
+        header h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
         }
         .logo {
             max-width: 150px;
             height: auto;
             margin-bottom: 0.5rem;
         }
-        .hero { 
-            padding: 8rem 10%; 
-            text-align: center; 
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80');
+        .hero {
+            padding: 8rem 10%;
+            text-align: center;
+            background: linear-gradient(rgba(38,46,40,0.45), rgba(38,46,40,0.55)), url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
             color: white;
         }
-        .hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 2rem; }
-        .cta-button { 
-            display: inline-block; 
-            background: var(--sage); 
-            color: white; 
-            padding: 1.2rem 3rem; 
-            text-decoration: none; 
-            border-radius: 50px; 
-            font-weight: bold;
+        .hero h1 { font-size: 3.3rem; font-weight: 600; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero p { font-family: 'Inter', sans-serif; font-size: 1.15rem; font-weight: 300; max-width: 600px; margin: 0 auto 2rem; }
+        .cta-button {
+            display: inline-block;
+            background: var(--sage);
+            color: white;
+            padding: 1.1rem 3rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
             transition: transform 0.2s, background 0.2s;
         }
         .cta-button:hover {
-            background: #6a7c70;
+            background: var(--sage-dark);
             transform: translateY(-2px);
         }
         .container { max-width: 1000px; margin: auto; padding: 5rem 1rem; }
@@ -66,17 +90,41 @@
             gap: 3rem; 
             margin-bottom: 4rem;
         }
-        .service-item { 
+        .service-item {
             background: var(--white);
-            padding: 2rem;
+            padding: 2.5rem 2rem 2rem;
             border-radius: 12px;
+            border-top: 4px solid var(--accent);
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
         }
         .service-item:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
         }
-        .price { font-weight: bold; color: var(--sage); font-size: 1.2rem; display: block; margin-top: 1rem; }
+        .service-item--sport { --accent: var(--sport); --tint: var(--sport-tint); }
+        .service-item--classic { --accent: var(--classic); --tint: var(--classic-tint); }
+        .service-item--fascia { --accent: var(--fascia); --tint: var(--fascia-tint); }
+        .service-item h3 { color: var(--accent); margin-top: 0; }
+        .service-item p { flex-grow: 1; }
+        .price { font-weight: bold; color: var(--accent); font-size: 1.2rem; display: block; margin-top: 1rem; }
+        .service-book-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--accent);
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+        .service-book-link:hover {
+            border-color: var(--accent);
+        }
         
         .about-section {
             display: grid;
@@ -112,11 +160,22 @@
             flex-direction: column;
             gap: 1rem;
         }
-        .contact-form input, .contact-form textarea {
+        .contact-form input, .contact-form select, .contact-form textarea {
             padding: 1rem;
             border: none;
             border-radius: 8px;
             font-family: inherit;
+            font-size: 1rem;
+            color: var(--text);
+            background: var(--white);
+        }
+        .contact-form select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%235f7266'><path d='M5.5 7.5l4.5 4.5 4.5-4.5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
         }
         .submit-button {
             background: var(--white);
@@ -132,7 +191,93 @@
         .submit-button:hover {
             opacity: 0.9;
         }
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        #form-status.success { color: #eaffea; }
+        #form-status.error { color: #ffe0e0; }
         
+        .date-picker-wrapper { position: relative; }
+        #booking-date-display { width: 100%; box-sizing: border-box; cursor: pointer; }
+        .date-picker-popup {
+            display: none;
+            position: absolute;
+            z-index: 20;
+            left: 0;
+            top: calc(100% + 0.5rem);
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 1rem;
+            width: 280px;
+            text-align: left;
+        }
+        .date-picker-popup.open { display: block; }
+        .date-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .date-picker-header button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--sage);
+            padding: 0 0.5rem;
+        }
+        .date-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .dp-weekday { font-weight: 600; color: #999; font-size: 0.7rem; padding-bottom: 4px; }
+        .dp-day { position: relative; padding: 0.5rem 0; border-radius: 6px; cursor: pointer; color: var(--text); }
+        .dp-day:hover { background: var(--cream); }
+        .dp-day.dp-disabled { color: #ddd; cursor: not-allowed; }
+        .dp-day.dp-booked::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #a1443a;
+        }
+        .dp-day.dp-selected { background: var(--sage); color: white; }
+        .dp-day.dp-selected.dp-booked::after { background: white; }
+        .date-picker-legend { font-size: 0.75rem; color: #888; margin-top: 0.75rem; }
+        .date-picker-legend span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #a1443a; margin-right: 4px; }
+        #booked-times-note {
+            display: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            margin: -0.5rem 0 0;
+        }
+
+        .map-wrapper {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .map-wrapper iframe {
+            width: 100%;
+            height: 350px;
+            border: 0;
+            display: block;
+        }
+
         .info-section { text-align: center; background: var(--cream); padding: 5rem 1rem; }
         
         footer { text-align: center; padding: 4rem; font-size: 0.9rem; background: var(--white); border-top: 1px solid #eee; }
@@ -151,31 +296,39 @@
     </header>
 
     <section class="hero">
-        <h1>Välkommen till Reinhold Gillholm</h1>
-        <p>Idrottsmassage och klassisk massage för din hälsa och rörlighet i Västra Frölunda.</p>
+        <h1>Välkommen till Grundlig Massage</h1>
+        <p>Idrottsmassage och klassisk massage för din hälsa och rörlighet i Göteborg.</p>
         <a href="#contact" class="cta-button">Boka behandling</a>
     </section>
 
     <div class="container">
         <h2 style="text-align: center; margin-bottom: 3rem;">Våra tjänster</h2>
         <div class="services-grid">
-            <div class="service-item">
+            <div class="service-item service-item--sport">
                 <h3>Idrottsmassage</h3>
                 <p>En djupgående behandling som fokuserar på att förebygga skador, förbättra rörlighet och påskynda återhämtning efter fysisk aktivitet. Anpassas efter dina specifika behov och träningsmål.</p>
-                <span class="price">Från 750 kr</span>
+                <span class="price">Från 650 kr</span>
+                <a href="#contact" class="service-book-link" data-category="Idrottsmassage">Boka denna behandling →</a>
             </div>
-            <div class="service-item">
+            <div class="service-item service-item--classic">
                 <h3>Klassisk Massage</h3>
                 <p>En avslappnande och terapeutisk massage som mjukar upp spända muskler, ökar cirkulationen och ger en skön känsla av välbefinnande. Perfekt för stressreducering och vardaglig muskelvärk.</p>
                 <span class="price">Från 650 kr</span>
+                <a href="#contact" class="service-book-link" data-category="Klassisk Massage">Boka denna behandling →</a>
+            </div>
+            <div class="service-item service-item--fascia">
+                <h3>Fasciabehandling</h3>
+                <p>En behandling som riktar in sig på fascian – den bindväv som omsluter dina muskler. Genom mjuka, riktade tekniker löser vi upp spänningar och sammanväxningar, förbättrar rörligheten och lindrar långvarig smärta. Passar dig som känner stelhet och stramhet som vanlig massage inte når.</p>
+                <span class="price">Från 650 kr</span>
+                <a href="#contact" class="service-book-link" data-category="Fasciabehandling">Boka denna behandling →</a>
             </div>
         </div>
 
         <div class="about-section">
-            <img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=800&q=80" alt="Avslappnande miljö" class="about-image">
+            <img src="images/physio-illustration.jpg" alt="Illustration av idrottsmassage och rörlighetsbehandling" class="about-image">
             <div class="about-text">
                 <h2>Om Grundlig Massage</h2>
-                <p>Jag heter Reinhold Gillholm och driver Grundlig Massage i Västra Frölunda. Med fokus på kvalitet och personligt bemötande hjälper jag dig att nå dina hälsomål, oavsett om du är elitidrottare eller behöver hjälp med vardagsstelhet.</p>
+                <p>Jag heter Reinhold Gillholm och driver Grundlig Massage i Göteborg. Med fokus på kvalitet och personligt bemötande hjälper jag dig att nå dina hälsomål, oavsett om du är elitidrottare eller behöver hjälp med vardagsstelhet.</p>
                 <p>Målet är alltid att ge en behandling som gör skillnad på djupet – därav namnet Grundlig Massage. Jag kombinerar tekniker från idrottsmassage och klassisk massage för att skapa en behandling som passar just dig.</p>
             </div>
         </div>
@@ -192,26 +345,230 @@
                 </p>
                 <p>
                     <strong>E-post:</strong><br>
-                    <a href="mailto:glad_man1@hotmail.com" style="color: white; text-decoration: none;">glad_man1@hotmail.com</a>
+                    <a href="mailto:grundlig.massage@hotmail.com" style="color: white; text-decoration: none;">grundlig.massage@hotmail.com</a>
                 </p>
                 <p>
                     <strong>Adress:</strong><br>
-                    Åkeredsvägen 5, 421 63 Västra Frölunda
+                    Olivedalsgatan 2, Göteborg
                 </p>
             </div>
-            <form class="contact-form">
-                <input type="text" placeholder="Namn" required>
-                <input type="email" placeholder="E-post" required>
-                <textarea rows="4" placeholder="Ditt meddelande (t.ex. önskad dag och tid)"></textarea>
+            <!-- Testadress under utveckling — mottagaren sätts i EmailJS-mallens "To Email", byt till grundlig.massage@hotmail.com inför lansering -->
+            <form class="contact-form" id="booking-form">
+                <input type="text" name="Namn" placeholder="Namn" required>
+                <input type="email" name="E-post" placeholder="E-post" required>
+                <select name="Kategori" id="booking-category" required>
+                    <option value="" disabled selected>Välj typ av massage</option>
+                    <option value="Idrottsmassage">Idrottsmassage</option>
+                    <option value="Klassisk Massage">Klassisk Massage</option>
+                    <option value="Fasciabehandling">Fasciabehandling</option>
+                </select>
+                <select name="Onskad_langd" required>
+                    <option value="" disabled selected>Önskad längd</option>
+                    <option value="30 min">30 min</option>
+                    <option value="60 min">60 min</option>
+                    <option value="90 min">90 min</option>
+                </select>
+                <div class="date-picker-wrapper">
+                    <input type="text" id="booking-date-display" placeholder="Välj datum" readonly required>
+                    <input type="hidden" name="Onskat_datum" id="booking-date">
+                    <div class="date-picker-popup" id="date-picker-popup">
+                        <div class="date-picker-header">
+                            <button type="button" id="dp-prev">‹</button>
+                            <span id="dp-month-label"></span>
+                            <button type="button" id="dp-next">›</button>
+                        </div>
+                        <div class="date-picker-grid" id="dp-grid"></div>
+                        <p class="date-picker-legend"><span></span>= redan en bokning den dagen</p>
+                    </div>
+                </div>
+                <p id="booked-times-note"></p>
+                <input type="time" name="Onskad_tid" id="booking-time" required>
+                <textarea rows="3" name="Meddelande" placeholder="Övrigt meddelande (valfritt)"></textarea>
                 <button type="submit" class="submit-button">Skicka förfrågan</button>
+                <p id="form-status" style="display: none; margin: 0;"></p>
             </form>
+        </div>
+        <div class="map-wrapper">
+            <iframe
+                src="https://www.google.com/maps?q=Olivedalsgatan+2,+G%C3%B6teborg&output=embed"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Karta till Grundlig Massage på Olivedalsgatan 2, Göteborg">
+            </iframe>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 Grundlig Massage - Reinhold Gillholm<br> 
-        Åkeredsvägen 5, 421 63 Västra Frölunda</p>
+        <p>&copy; 2026 Grundlig Massage - Reinhold Gillholm<br>
+        Olivedalsgatan 2, Göteborg</p>
     </footer>
 
+    <script src="supabase-config.js"></script>
+    <script src="booking-api.js"></script>
+    <script>
+        // --- Datumväljare med bokade tider per dag ---
+        const busyTimesByDate = new Map(); // 'YYYY-MM-DD' -> ['14:00–15:00', ...]
+        let calendarMonth = new Date();
+        calendarMonth.setDate(1);
+        let selectedDate = null;
+
+        const dateDisplay = document.getElementById('booking-date-display');
+        const dateHidden = document.getElementById('booking-date');
+        const datePopup = document.getElementById('date-picker-popup');
+        const dpGrid = document.getElementById('dp-grid');
+        const dpMonthLabel = document.getElementById('dp-month-label');
+        const bookedTimesNote = document.getElementById('booked-times-note');
+
+        function addMinutes(timeStr, minutes) {
+            const [h, m] = timeStr.split(':').map(Number);
+            const total = ((h * 60 + m + minutes) % (24 * 60) + 24 * 60) % (24 * 60);
+            return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+        }
+
+        async function loadBusyDates() {
+            try {
+                const { busy } = await callBookingFunction('busy-times');
+                (busy || []).forEach(({ date, time, duration }) => {
+                    const minutes = parseInt(duration, 10) || 60;
+                    const range = `${time}–${addMinutes(time, minutes)}`;
+                    if (!busyTimesByDate.has(date)) busyTimesByDate.set(date, []);
+                    busyTimesByDate.get(date).push(range);
+                });
+            } catch (error) {
+                console.error('Kunde inte hämta bokade tider', error);
+            }
+            renderCalendar();
+        }
+
+        function updateBookedTimesNote(dateStr) {
+            const times = busyTimesByDate.get(dateStr);
+            if (times && times.length) {
+                bookedTimesNote.textContent = `Redan bokat den dagen: ${times.join(', ')}`;
+                bookedTimesNote.style.display = 'block';
+            } else {
+                bookedTimesNote.style.display = 'none';
+            }
+        }
+
+        function renderCalendar() {
+            dpGrid.innerHTML = '';
+            const monthNames = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'];
+            dpMonthLabel.textContent = `${monthNames[calendarMonth.getMonth()]} ${calendarMonth.getFullYear()}`;
+
+            ['M', 'T', 'O', 'T', 'F', 'L', 'S'].forEach((w) => {
+                const el = document.createElement('div');
+                el.className = 'dp-weekday';
+                el.textContent = w;
+                dpGrid.appendChild(el);
+            });
+
+            const firstDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+            const startOffset = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < startOffset; i++) {
+                dpGrid.appendChild(document.createElement('div'));
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateObj = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), d);
+                const dateStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const cell = document.createElement('div');
+                cell.className = 'dp-day';
+                cell.textContent = d;
+
+                if (dateObj < today) {
+                    cell.classList.add('dp-disabled');
+                } else {
+                    if (busyTimesByDate.has(dateStr)) cell.classList.add('dp-booked');
+                    if (dateStr === selectedDate) cell.classList.add('dp-selected');
+                    cell.addEventListener('click', () => {
+                        selectedDate = dateStr;
+                        dateHidden.value = dateStr;
+                        dateDisplay.value = dateObj.toLocaleDateString('sv-SE');
+                        datePopup.classList.remove('open');
+                        updateBookedTimesNote(dateStr);
+                        renderCalendar();
+                    });
+                }
+                dpGrid.appendChild(cell);
+            }
+        }
+
+        dateDisplay.addEventListener('click', () => {
+            datePopup.classList.toggle('open');
+        });
+        document.getElementById('dp-prev').addEventListener('click', () => {
+            calendarMonth.setMonth(calendarMonth.getMonth() - 1);
+            renderCalendar();
+        });
+        document.getElementById('dp-next').addEventListener('click', () => {
+            calendarMonth.setMonth(calendarMonth.getMonth() + 1);
+            renderCalendar();
+        });
+        document.addEventListener('click', (event) => {
+            if (!document.querySelector('.date-picker-wrapper').contains(event.target)) {
+                datePopup.classList.remove('open');
+            }
+        });
+
+        loadBusyDates();
+
+        const categorySelect = document.getElementById('booking-category');
+        document.querySelectorAll('.service-book-link').forEach((link) => {
+            link.addEventListener('click', () => {
+                categorySelect.value = link.dataset.category;
+            });
+        });
+
+        const bookingForm = document.getElementById('booking-form');
+        const formStatus = document.getElementById('form-status');
+        const submitButton = bookingForm.querySelector('.submit-button');
+
+        bookingForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            submitButton.disabled = true;
+            formStatus.style.display = 'block';
+            formStatus.className = '';
+            formStatus.textContent = 'Skickar...';
+
+            const formData = new FormData(bookingForm);
+            const namn = formData.get('Namn');
+            const kundEpost = formData.get('E-post');
+            const kategori = formData.get('Kategori');
+            const langd = formData.get('Onskad_langd');
+            const datum = formData.get('Onskat_datum');
+            const tid = formData.get('Onskad_tid');
+            const meddelande = formData.get('Meddelande');
+
+            try {
+                // Backend lagrar bokningen och skickar både admin-mailet (med
+                // Bekräfta/Föreslå annan tid-länkar) och "Tack för din bokning" till kund.
+                await callBookingFunction('create-booking', {
+                    method: 'POST',
+                    body: {
+                        name: namn,
+                        email: kundEpost,
+                        category: kategori,
+                        duration: langd,
+                        date: datum,
+                        time: tid,
+                        message: meddelande
+                    }
+                });
+                formStatus.className = 'success';
+                formStatus.textContent = 'Tack! Din bokningsförfrågan har skickats. Vi hör av oss så snart som möjligt.';
+                bookingForm.reset();
+            } catch (error) {
+                formStatus.className = 'error';
+                formStatus.textContent = 'Något gick fel. Försök igen eller ring 0793-500 774.';
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
