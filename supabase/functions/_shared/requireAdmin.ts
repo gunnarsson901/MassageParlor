@@ -9,7 +9,16 @@ export async function requireAdmin(req: Request): Promise<{ ok: true } | { ok: f
 
   const supabase = supabaseAdmin();
   const { data, error } = await supabase.auth.getUser(token);
-  if (error || !data.user || data.user.email !== Deno.env.get('ADMIN_EMAIL')) {
+  const allowedAdmins = new Set([
+    'info@grundligmassage.se',
+    'gunnarsson901@gmail.com',
+    ...(Deno.env.get('ADMIN_EMAIL') ?? '')
+      .split(',')
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean),
+  ]);
+  const userEmail = data.user?.email?.toLowerCase() ?? '';
+  if (error || !data.user || !allowedAdmins.has(userEmail)) {
     return { ok: false, status: 403 };
   }
   return { ok: true };
