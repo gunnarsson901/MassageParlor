@@ -50,29 +50,36 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'insert-failed' }, 500);
   }
 
-  // Bokningsförfrågan mailas till båda adresserna. Kräver att EmailJS-mallen
-  // EMAILJS_TEMPLATE_ID_REQUEST har "To Email" satt till {{admin_email}}.
+  // Bokningsförfrågan mailas till båda adresserna via den generiska mallen
+  // så att HTML-innehållet styrs helt härifrån utan knappar för direktbekräftelse.
   const adminEmail = Deno.env.get('BOOKING_EMAIL') ??
     'gunnarsson901@gmail.com, info@grundligmassage.se';
 
-  const siteOrigin = Deno.env.get('ALLOWED_ORIGIN') ?? '';
-  const linkParams = new URLSearchParams({ id: data.id, token: data.token }).toString();
-  const acceptLink = `${siteOrigin}/accept.html?${linkParams}`;
-  const declineLink = `${siteOrigin}/decline.html?${linkParams}`;
+  const siteOrigin = Deno.env.get('ALLOWED_ORIGIN') || 'https://grundligmassage.se';
+  const adminLink = `${siteOrigin}/admin.html`;
 
   try {
     await Promise.all([
-      sendEmail(Deno.env.get('EMAILJS_TEMPLATE_ID_REQUEST')!, {
-        admin_email: adminEmail,
-        from_name: name,
-        from_email: email,
-        category,
-        duration,
-        date,
-        time,
-        message: message || '',
-        accept_link: acceptLink,
-        decline_link: declineLink,
+      sendEmail(Deno.env.get('EMAILJS_TEMPLATE_ID_CUSTOMER')!, {
+        to_name: 'Reinhold',
+        to_email: adminEmail,
+        subject: `Ny bokningsförfrågan (${category}, ${date}) - Grundlig Massage`,
+        accent_color: '#5f7266',
+        heading: 'Ny bokningsförfrågan',
+        body_html: `
+          <p>En ny bokningsförfrågan har kommit in från <strong>${escapeHtml(name)}</strong>:</p>
+          <table cellpadding="6">
+            <tr><td><strong>Kategori:</strong></td><td>${escapeHtml(category)}</td></tr>
+            <tr><td><strong>Längd:</strong></td><td>${escapeHtml(duration)}</td></tr>
+            <tr><td><strong>Datum:</strong></td><td>${escapeHtml(date)}</td></tr>
+            <tr><td><strong>Tid:</strong></td><td>${escapeHtml(time)}</td></tr>
+            <tr><td><strong>E-post:</strong></td><td><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td></tr>
+            ${message ? `<tr><td><strong>Meddelande:</strong></td><td>${escapeHtml(message)}</td></tr>` : ''}
+          </table>
+          <p style="margin-top: 1.25rem;">
+            <a href="${adminLink}" style="background:#5f7266;color:#ffffff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;">Öppna Adminpanelen</a>
+          </p>
+        `,
       }),
       sendEmail(Deno.env.get('EMAILJS_TEMPLATE_ID_CUSTOMER')!, {
         to_name: name,

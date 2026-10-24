@@ -58,17 +58,28 @@ Deno.serve(async (req: Request) => {
   if (action === 'accept') {
     const { data: booking, error: fetchError } = await supabase
       .from('bookings')
-      .select('status')
+      .select('status, date, time, decline_suggested_date, decline_suggested_time')
       .eq('id', id)
       .maybeSingle();
     if (fetchError || !booking) return json({ error: 'not-found' }, 404);
-    if (booking.status !== 'pending') return json({ error: 'invalid-status' }, 409);
+    if (booking.status !== 'pending' && booking.status !== 'declined') {
+      return json({ error: 'invalid-status' }, 409);
+    }
+
+    const updatePayload: Record<string, unknown> = {
+      status: 'confirmed',
+      responded_at: new Date().toISOString(),
+    };
+    if (booking.status === 'declined' && booking.decline_suggested_date && booking.decline_suggested_time) {
+      updatePayload.date = booking.decline_suggested_date;
+      updatePayload.time = booking.decline_suggested_time;
+    }
 
     const { data: updated, error: updateError } = await supabase
       .from('bookings')
-      .update({ status: 'confirmed', responded_at: new Date().toISOString() })
+      .update(updatePayload)
       .eq('id', id)
-      .eq('status', 'pending')
+      .in('status', ['pending', 'declined'])
       .select('name, email, category, duration, date, time')
       .maybeSingle();
     if (updateError || !updated) return json({ error: 'invalid-status' }, 409);
@@ -109,7 +120,9 @@ Deno.serve(async (req: Request) => {
       .eq('id', id)
       .maybeSingle();
     if (fetchError || !booking) return json({ error: 'not-found' }, 404);
-    if (booking.status !== 'pending') return json({ error: 'invalid-status' }, 409);
+    if (booking.status !== 'pending' && booking.status !== 'declined') {
+      return json({ error: 'invalid-status' }, 409);
+    }
 
     const { data: updated, error: updateError } = await supabase
       .from('bookings')
@@ -121,7 +134,7 @@ Deno.serve(async (req: Request) => {
         decline_note: note || null,
       })
       .eq('id', id)
-      .eq('status', 'pending')
+      .in('status', ['pending', 'declined'])
       .select('name, email, category, duration, date, time')
       .maybeSingle();
     if (updateError || !updated) return json({ error: 'invalid-status' }, 409);
