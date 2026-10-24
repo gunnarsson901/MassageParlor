@@ -24,7 +24,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const ALLOWED_CATEGORIES = ['Idrottsmassage', 'Klassisk Massage', 'Fasciabehandling'];
-  const ALLOWED_DURATIONS = ['30 min', '60 min', '90 min'];
+  const ALLOWED_DURATIONS = ['40 min', '60 min', '90 min'];
   if (!ALLOWED_CATEGORIES.includes(category) || !ALLOWED_DURATIONS.includes(duration)) {
     return json({ error: 'invalid-fields' }, 400);
   }
@@ -50,6 +50,11 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'insert-failed' }, 500);
   }
 
+  // Bokningsförfrågan mailas till båda adresserna. Kräver att EmailJS-mallen
+  // EMAILJS_TEMPLATE_ID_REQUEST har "To Email" satt till {{admin_email}}.
+  const adminEmail = Deno.env.get('ADMIN_EMAIL') ??
+    'gunnarsson901@gmail.com, info@grundligmassage.se';
+
   const siteOrigin = Deno.env.get('ALLOWED_ORIGIN') ?? '';
   const linkParams = new URLSearchParams({ id: data.id, token: data.token }).toString();
   const acceptLink = `${siteOrigin}/accept.html?${linkParams}`;
@@ -58,6 +63,7 @@ Deno.serve(async (req: Request) => {
   try {
     await Promise.all([
       sendEmail(Deno.env.get('EMAILJS_TEMPLATE_ID_REQUEST')!, {
+        admin_email: adminEmail,
         from_name: name,
         from_email: email,
         category,

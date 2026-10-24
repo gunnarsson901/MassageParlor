@@ -3,8 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grundlig Massage - Idrotts- & Klassisk Massage</title>
+    <title>Massage i Göteborg – Idrottsmassage, Klassisk Massage & Fasciabehandling | Grundlig Massage</title>
+    <meta name="description" content="Grundlig Massage i Göteborg – idrottsmassage, klassisk massage och fasciabehandling på Olivedalsgatan 2. Skräddarsydd behandling mot ont i rygg, nacke och stela muskler. Boka online eller ring 0793-500 774.">
+    <link rel="canonical" href="https://grundligmassage.se/">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="sv_SE">
+    <meta property="og:site_name" content="Grundlig Massage">
+    <meta property="og:title" content="Grundlig Massage – Massage i Göteborg">
+    <meta property="og:description" content="Idrottsmassage, klassisk massage och fasciabehandling i Göteborg. Boka din tid online.">
+    <meta property="og:url" content="https://grundligmassage.se/">
+    <meta property="og:image" content="https://grundligmassage.se/images/header.jpeg">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" href="images/logo.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HealthAndBeautyBusiness",
+        "@id": "https://grundligmassage.se/#business",
+        "name": "Grundlig Massage",
+        "description": "Idrottsmassage, klassisk massage och fasciabehandling i Göteborg.",
+        "url": "https://grundligmassage.se/",
+        "logo": "https://grundligmassage.se/images/logo.png",
+        "image": "https://grundligmassage.se/images/header.jpeg",
+        "telephone": "+46793500774",
+        "email": "info@grundligmassage.se",
+        "founder": { "@type": "Person", "name": "Reinhold Gillholm" },
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Olivedalsgatan 2",
+            "addressLocality": "Göteborg",
+            "addressCountry": "SE"
+        },
+        "areaServed": { "@type": "City", "name": "Göteborg" },
+        "priceRange": "450–950 kr",
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Behandlingar",
+            "itemListElement": [
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Idrottsmassage" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Klassisk massage" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fasciabehandling" } }
+            ]
+        }
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -415,8 +458,8 @@
         </header>
 
         <section class="hero">
-            <h1>Välkommen till Grundlig Massage</h1>
-            <p>Har du ont i kroppen, spänd rygg eller stela muskler? Genom skräddarsydd idrotts- och klassisk massage hjälper jag dig att bli av med smärtan och röra dig fritt igen.</p>
+            <h1>Välkommen till Grundlig Massage i Göteborg</h1>
+            <p>Har du ont i kroppen, spänd rygg eller stela muskler? Genom skräddarsydd idrotts- och klassisk massage hjälper jag dig att bli av med smärtan och uppnå bättre rörlighet.</p>
             <a href="#contact" class="cta-button">Boka behandling</a>
         </section>
     </div>
@@ -449,7 +492,7 @@
             <div class="about-text">
                 <h2>Om Grundlig Massage</h2>
                 <p>Jag heter Reinhold Gillholm och driver Grundlig Massage i Göteborg. Med fokus på kvalitet och personligt bemötande hjälper jag dig att nå dina hälsomål, oavsett om du är elitidrottare eller behöver hjälp med vardagsstelhet.</p>
-                <p>Målet är alltid att ge en behandling som gör skillnad på djupet – därav namnet Grundlig Massage. Jag kombinerar tekniker från idrottsmassage och klassisk massage för att skapa en behandling som passar just dig.</p>
+                <p>Målet är alltid att ge en behandling som gör skillnad på djupet – därav namnet Grundlig Massage. Jag kombinerar tekniker från idrottsmassage och klassisk massage för att skapa en behandling som passar just dig. Kinesiologitejpning ingår.</p>
             </div>
         </div>
     </div>
@@ -465,14 +508,14 @@
                 </p>
                 <p>
                     <strong>E-post:</strong><br>
-                    <a href="mailto:grundlig.massage@hotmail.com" style="color: white; text-decoration: none;">grundlig.massage@hotmail.com</a>
+                    <a href="mailto:info@grundligmassage.se" style="color: white; text-decoration: none;">info@grundligmassage.se</a>
                 </p>
                 <p>
                     <strong>Adress:</strong><br>
                     Olivedalsgatan 2, Göteborg
                 </p>
             </div>
-            <!-- Testadress under utveckling — mottagaren sätts i EmailJS-mallens "To Email", byt till grundlig.massage@hotmail.com inför lansering -->
+            <!-- Testadress under utveckling — mottagaren sätts i EmailJS-mallens "To Email", byt till info@grundligmassage.se inför lansering -->
             <form class="contact-form" id="booking-form">
                 <input type="text" name="Namn" placeholder="Namn" required>
                 <input type="email" name="E-post" placeholder="E-post" required>
@@ -482,9 +525,9 @@
                     <option value="Klassisk Massage">Klassisk Massage</option>
                     <option value="Fasciabehandling">Fasciabehandling</option>
                 </select>
-                <select name="Onskad_langd" required>
+                <select name="Onskad_langd" id="booking-length" required>
                     <option value="" disabled selected>Önskad längd</option>
-                    <option value="30 min">30 min</option>
+                    <option value="40 min">40 min</option>
                     <option value="60 min">60 min</option>
                     <option value="90 min">90 min</option>
                 </select>
@@ -507,6 +550,7 @@
                 <button type="submit" class="submit-button">Skicka förfrågan</button>
                 <p id="form-status" style="display: none; margin: 0;"></p>
             </form>
+            <p id="booking-price" class="price" style="display: none;"></p>
         </div>
         <div class="map-wrapper">
             <iframe
@@ -651,6 +695,26 @@
         const formStatus = document.getElementById('form-status');
         const submitButton = bookingForm.querySelector('.submit-button');
 
+        // --- Pris utifrån vald längd ---
+        const PRICE_BY_LENGTH = { '40 min': 450, '60 min': 650, '90 min': 950 };
+        const lengthSelect = document.getElementById('booking-length');
+        const bookingTime = document.getElementById('booking-time');
+        const priceNote = document.getElementById('booking-price');
+
+        function updatePrice() {
+            const price = PRICE_BY_LENGTH[lengthSelect.value];
+            if (price && bookingTime.value) {
+                priceNote.textContent = `Pris: ${price} kr`;
+                priceNote.style.display = 'block';
+            } else {
+                priceNote.style.display = 'none';
+            }
+        }
+
+        lengthSelect.addEventListener('change', updatePrice);
+        bookingTime.addEventListener('input', updatePrice);
+        bookingTime.addEventListener('change', updatePrice);
+
         bookingForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             submitButton.disabled = true;
@@ -685,6 +749,7 @@
                 formStatus.className = 'success';
                 formStatus.textContent = 'Tack! Din bokningsförfrågan har skickats. Vi hör av oss så snart som möjligt.';
                 bookingForm.reset();
+                priceNote.style.display = 'none';
             } catch (error) {
                 formStatus.className = 'error';
                 formStatus.textContent = 'Något gick fel. Försök igen eller ring 0793-500 774.';
