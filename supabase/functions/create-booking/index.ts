@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
 
   // Bokningsförfrågan mailas till båda adresserna. Kräver att EmailJS-mallen
   // EMAILJS_TEMPLATE_ID_REQUEST har "To Email" satt till {{admin_email}}.
-  const adminEmail = Deno.env.get('ADMIN_EMAIL') ??
+  const adminEmail = Deno.env.get('BOOKING_EMAIL') ??
     'gunnarsson901@gmail.com, info@grundligmassage.se';
 
   const siteOrigin = Deno.env.get('ALLOWED_ORIGIN') ?? '';
